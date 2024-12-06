@@ -10,4 +10,19 @@ class SearchResponse {
   }
 }
 
-enum WeatherType {clear, rain, cloudy, other}
+enum WeatherType {clear, rain, cloudy, sunny, other}
+
+String weatherTypeToString(WeatherType type) {
+  switch (type) {
+    case WeatherType.cloudy:
+      return 'Clouds';
+    case WeatherType.clear:
+      return 'Clear';
+    case WeatherType.rain:
+      return 'Rain';
+    case WeatherType.sunny:
+      return 'Sunny';
+    default:
+      return 'Other';
+  }
+}

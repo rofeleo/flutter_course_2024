@@ -1,4 +1,5 @@
 import 'package:practice_1/features/core/domain/entities/search_query.dart';
+import 'package:practice_1/features/core/domain/entities/search_response.dart';
 import 'package:practice_1/features/core/domain/repositories/weather_repository.dart';
 import 'dart:io';
 
@@ -8,15 +9,33 @@ class App {
   App(this.repository);
 
   void run() async {
-    print('Введите город:');
-    var city = stdin.readLineSync();
+    print('Введите город или координаты (широта, долгота):');
+    var input = stdin.readLineSync();
 
-    if (city == null) {
+    if (input == null) {
       print('Ошибка ввода');
       return;
     }
 
-    var resp = await repository.getWeather(SearchQuery(city));
-    print('Погода в городе $city: ${resp.temp-273} по Цельсию, тип: ${resp.type}');
+    SearchQuery query;
+    if (input.contains(',')) {
+      var coords = input.split(',');
+      if (coords.length != 2) {
+        print('Неверный формат координат');
+        return;
+      }
+      var latitude = double.tryParse(coords[0].trim());
+      var longitude = double.tryParse(coords[1].trim());
+      if (latitude == null || longitude == null) {
+        print('Неверный формат координат');
+        return;
+      }
+      query = SearchByCoordinates(latitude, longitude);
+    } else {
+      query = SearchByCity(input);
+    }
+
+    var resp = await repository.getWeather(query);
+    print('Температура: ${resp.temp} по Цельсию, погода: ${weatherTypeToString(resp.type)}');
   }
 }
