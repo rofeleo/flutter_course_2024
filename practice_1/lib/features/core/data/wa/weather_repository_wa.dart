@@ -10,14 +10,15 @@ class WeatherRepositoryWA implements WeatherRepository {
 
   @override
   Future<SearchResponse> getWeather(SearchQuery query) async {
-    if (query is SearchByCity) {
-      var response = await _api.getWeather(query.city);
-      return SearchResponse(response.temp.toInt(), _weatherType(response.type));
-    } else if (query is SearchByCoordinates) {
-      var response = await _api.getWeatherByCoords(query.width, query.longitude);
-      return SearchResponse(response.temp.toInt(), _weatherType(response.type));
-    } else {
-      throw UnimplementedError();
+    switch (query) {
+      case SearchByCity():
+        var response = await _api.getWeather(query.city);
+        return SearchResponse(response.temp.toInt(), _weatherType(response.type));
+      case SearchByCoordinates():
+        var response = await _api.getWeatherByCoords(query.width, query.longitude);
+        return SearchResponse(response.temp.toInt(), _weatherType(response.type));
+      default:
+        throw UnimplementedError();
     }
   }
 }
