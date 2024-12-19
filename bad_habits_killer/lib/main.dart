@@ -62,26 +62,40 @@ class HomeScreen extends StatelessWidget {
             itemCount: habitProvider.habits.length,
             itemBuilder: (context, index) {
               final habit = habitProvider.habits[index];
-              return ListTile(
-                title: Text(habit.name),
-                subtitle: Text('${habit.category} - Last used: ${habit.lastUsed.toLocal()}'.split(' ')[0]),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    habitProvider.deleteHabit(index);
-                  },
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditHabitScreen(
-                        habit: habit,
-                        index: index,
+              final daysSinceLastUsed = DateTime.now().difference(habit.lastUsed).inDays;
+              return Column(
+                children: [
+                  if (daysSinceLastUsed >= 7)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Поздравляем! Вы не употребляете ${habit.name} уже неделю, так держать!',
+                        style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                  );
-                },
+                  ListTile(
+                    title: Text(habit.name),
+                    subtitle: Text('${habit.category} - Last used: ${habit.lastUsed.toLocal()}'.split(' ')[0]),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        habitProvider.deleteHabit(index);
+                      },
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditHabitScreen(
+                            habit: habit,
+                            index: index,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               );
             },
           );
