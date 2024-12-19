@@ -63,13 +63,19 @@ class HomeScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final habit = habitProvider.habits[index];
               final daysSinceLastUsed = DateTime.now().difference(habit.lastUsed).inDays;
+              final congratulationDays = {
+                'Nicotine': 2,
+                'Food': 5,
+                'Alcohol': 3,
+              }[habit.category] ?? 7;
+
               return Column(
                 children: [
-                  if (daysSinceLastUsed >= 7)
+                  if (daysSinceLastUsed >= congratulationDays)
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        'Поздравляем! Вы не употребляете ${habit.name} уже неделю, так держать!',
+                        'Поздравляем! Вы не употребляете ${habit.name} уже $congratulationDays ${congratulationDays == 1 ? 'день' : 'дней'}, так держать!',
                         style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
