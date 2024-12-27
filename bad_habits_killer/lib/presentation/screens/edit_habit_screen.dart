@@ -4,8 +4,8 @@ import '../../data/models/habit.dart';
 import '../../data/providers/habit_provider.dart';
 
 class EditHabitScreen extends StatefulWidget {
-  final Habit? habit;
-  final int? index;
+  final Habit? habit; // Привычка для редактирования (если null, создаётся новая).
+  final int? index;   // Индекс редактируемой привычки (если null, создаётся новая).
 
   EditHabitScreen({this.habit, this.index});
 
@@ -14,14 +14,15 @@ class EditHabitScreen extends StatefulWidget {
 }
 
 class _EditHabitScreenState extends State<EditHabitScreen> {
-  final _formKey = GlobalKey<FormState>();
-  String? _selectedCategory;
-  String? _name;
-  DateTime? _lastUsed;
+  final _formKey = GlobalKey<FormState>(); // Ключ формы для валидации.
+  String? _selectedCategory; // Выбранная категория привычки.
+  String? _name;             // Название привычки.
+  DateTime? _lastUsed;       // Дата последнего использования привычки.
 
   @override
   void initState() {
     super.initState();
+    // Инициализация полей, если привычка передана для редактирования.
     if (widget.habit != null) {
       _selectedCategory = widget.habit!.category;
       _name = widget.habit!.name;
@@ -33,7 +34,7 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.habit == null ? 'Add Habit' : 'Edit Habit'),
+        title: Text(widget.habit == null ? 'Add Habit' : 'Edit Habit'), // Заголовок экрана.
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -69,6 +70,7 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
               SizedBox(height: 16),
               TextButton(
                 onPressed: () async {
+                  // Открытие диалога выбора даты.
                   final selectedDate = await showDatePicker(
                     context: context,
                     initialDate: _lastUsed ?? DateTime.now(),
@@ -91,12 +93,11 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                     final habit = Habit(
-                      category: _selectedCategory!,
-                      name: _name!,
-                      lastUsed: _lastUsed!,
+                    category: _selectedCategory!,
+                    name: _name!,
+                    lastUsed: _lastUsed!,
                     );
-                    final provider =
-                    Provider.of<HabitProvider>(context, listen: false);
+                    final provider = Provider.of<HabitProvider>(context, listen: false);
                     if (widget.index == null) {
                       provider.addHabit(habit);
                     } else {
@@ -114,3 +115,4 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
     );
   }
 }
+

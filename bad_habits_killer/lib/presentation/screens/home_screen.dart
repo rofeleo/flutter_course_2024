@@ -9,15 +9,17 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Habit Control'),
+        title: Text('Habit Control'), // Заголовок главного экрана.
       ),
       body: Consumer<HabitProvider>(
         builder: (context, habitProvider, child) {
+          // Строит список привычек из состояния HabitProvider.
           return ListView.builder(
             itemCount: habitProvider.habits.length,
             itemBuilder: (context, index) {
               final habit = habitProvider.habits[index];
               final daysSinceLastUsed = DateTime.now().difference(habit.lastUsed).inDays;
+              // Задаёт количество дней для поздравления в зависимости от категории.
               final congratulationDays = {
                 'Nicotine': 2,
                 'Food': 5,
@@ -36,15 +38,16 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   ListTile(
-                    title: Text(habit.name),
+                    title: Text(habit.name), // Название привычки.
                     subtitle: Text('${habit.category} - Last used: ${habit.lastUsed.toLocal()}'.split(' ')[0]),
                     trailing: IconButton(
-                      icon: Icon(Icons.delete),
+                      icon: Icon(Icons.delete), // Кнопка удаления привычки.
                       onPressed: () {
                         habitProvider.deleteHabit(index);
                       },
                     ),
                     onTap: () {
+                      // Переход на экран редактирования привычки.
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -63,8 +66,9 @@ class HomeScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: Icon(Icons.add), // Кнопка для добавления новой привычки.
         onPressed: () {
+          // Переход на экран добавления новой привычки.
           Navigator.push(
             context,
             MaterialPageRoute(
